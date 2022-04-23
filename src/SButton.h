@@ -1,21 +1,44 @@
 #ifndef S_BUTTON_H
 #define S_BUTTON_H
 #include "Arduino.h"
+
 class Sbutton {
   public:
     Sbutton(byte Npin, byte Npinmode) : _pin(Npin), _pinmode(Npinmode) {
       pinMode(_pin, (_pinmode) ? INPUT : INPUT_PULLUP);
     };
-    void tick();
-    bool isPressed(){return _pressed;}
-    bool isClicked(){return _clicked;}
-    bool isHeld(){return _held;}
-    bool isHold(){return _hold;}
-    uint8_t hasClicks(){return _clicksEnd;}
-    uint8_t hasClicksWithHeld(){return _clicksWithHeld;}
-    uint8_t hasClicksWithHold(){return _clicksWithHold;}
 
-  private:
+    void tick();
+    bool isPressed() {
+      return _pressed;
+    }
+
+    bool isClicked() {
+      return _clicked;
+    }
+
+    bool isHeld() {
+      return _held;
+    }
+
+    bool isHold() {
+      return _hold;
+    }
+
+    uint8_t hasClicks() {
+      return _clicksEnd;
+    }
+
+    uint8_t hasClicksWithHeld() {
+      return _clicksWithHeld;
+    }
+
+    uint8_t hasClicksWithHold() {
+      return _clicksWithHold;
+    }
+
+
+private:
     bool _pinmode:1;
     bool _lastState:1;
     bool _pressed:1;
