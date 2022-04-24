@@ -1,5 +1,6 @@
 # Sbutton
 
+[![arduino-library-badge](https://www.ardu-badge.com/badge/Sbutton.svg?)](https://www.ardu-badge.com/Sbutton)
 ![License](https://img.shields.io/badge/License-MIT-blue)
 ![Tests](https://img.shields.io/github/languages/top/duinolibs/Sbutton)
 ![Tests](https://img.shields.io/badge/version-0.0.5-blue)
