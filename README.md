@@ -26,6 +26,7 @@ bool hasTriple();            //(-B,H)returns true if button is clicked three tim
 uint8_t hasClicks();         //(-B,H)returns clicks 
 uint8_t hasClicksWithHeld(); //(-B,H,M)returns clicks before pressing
 uint8_t hasClicksWithHold(); //-B,H,M)returns clicks before holding
+```
 ## Using example
 ```cpp
 
