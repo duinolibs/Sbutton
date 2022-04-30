@@ -3,9 +3,29 @@
 [![arduino-library-badge](https://www.ardu-badge.com/badge/Sbutton.svg?)](https://www.ardu-badge.com/Sbutton)
 ![License](https://img.shields.io/badge/License-MIT-blue)
 ![Tests](https://img.shields.io/github/languages/top/duinolibs/Sbutton)
-![Tests](https://img.shields.io/badge/version-0.0.5-blue)
+![Tests](https://img.shields.io/badge/version-0.1.0-blue)
 ![Tests](https://img.shields.io/github/last-commit/duinolibs/Sbutton)
+## Comands
+```cpp
+Sbutton btn (pin, pinmode); //button initialization
+SbuttonBase                 // only clicks
+SbuttonMulticlick           // only multiclick
+SbuttonHold                 // hold and double click
+Sbutton                     // all functions
 
+void tick();                // obligatory function
+
+bool isPressed();            //(all)returns true if button is pressed
+bool isClicked();            //(all)returns true if button is clicked
+bool isHeld();               //(-B,M)returns true if button is pressed in timeout
+bool isHold();               //(-B,M)returns true if button is pressed after timeout
+bool hasSingle();            //(-B)returns true if button is clicked once
+bool hasDouble();            //(-B)returns true if button is clicked twice
+bool hasTriple();            //(-B,H)returns true if button is clicked three times
+
+uint8_t hasClicks();         //(-B,H)returns clicks 
+uint8_t hasClicksWithHeld(); //(-B,H,M)returns clicks before pressing
+uint8_t hasClicksWithHold(); //-B,H,M)returns clicks before holding
 ## Using example
 ```cpp
 
