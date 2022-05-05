@@ -3,11 +3,11 @@
 [![arduino-library-badge](https://www.ardu-badge.com/badge/Sbutton.svg?)](https://www.ardu-badge.com/Sbutton)
 ![License](https://img.shields.io/badge/License-MIT-blue)
 ![Tests](https://img.shields.io/github/languages/top/duinolibs/Sbutton)
-![Tests](https://img.shields.io/badge/version-0.1.0-blue)
+![Tests](https://img.shields.io/badge/version-0.1.2-blue)
 ![Tests](https://img.shields.io/github/last-commit/duinolibs/Sbutton)
 ## Comands
 ```cpp
-Sbutton btn (pin, pinmode); //button initialization
+Sbutton btn (pin, pinmode, normstate); //button initialization
 SbuttonBase                 // only clicks
 SbuttonMulticlick           // only multiclick
 SbuttonHold                 // hold and double click
@@ -17,6 +17,7 @@ void tick();                // obligatory function
 
 bool isPressed();            //(all)returns true if button is pressed
 bool isClicked();            //(all)returns true if button is clicked
+bool isReleased();           //(all)returns true if button is released
 bool isHeld();               //(-B,M)returns true if button is pressed in timeout
 bool isHold();               //(-B,M)returns true if button is pressed after timeout
 bool hasSingle();            //(-B)returns true if button is clicked once
@@ -47,6 +48,9 @@ void loop() {
 
   if (btn.isClicked())
     Serial.print("Clicked ");
+  
+  if (btn.isReleased())
+    Serial.print("Released ");
   
   if (btn.isHeld())
     Serial.print("Hold " + String(btn.hasClicksWithHeld()) + "\n");

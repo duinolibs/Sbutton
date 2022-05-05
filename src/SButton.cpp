@@ -2,14 +2,15 @@
 
 void SbuttonBase::tick() {
   _clicked = 0;
+  _released = 0;
   uint32_t t = millis();
   bool reading = digitalRead(_pin) == (_pinmode) ? HIGH : LOW;
   if (reading != _lastState) {
     _lastChange = t;
   }
   if (t - _lastChange > SB_DEB_TIMER) {
-    if (reading != _pressed) {
-      _pressed = reading;
+    if (reading == (_pinclosed) ? _pressed : !_pressed) {
+      _pressed = (_pinclosed) ? !reading : reading;
     }
 
     if (_pressed) {
@@ -17,10 +18,11 @@ void SbuttonBase::tick() {
         mode = pressed;
         _clicked = 1;
       }
-    }
-  } else {
-    if (mode == pressed) {
-      mode = await;
+    } else {
+      if (mode == pressed) {
+        mode = await;
+        _released = 1;
+      }
     }
   }
   _lastState = reading;
@@ -29,14 +31,15 @@ void SbuttonBase::tick() {
 void SbuttonMultiClick::tick() {
   _clicked = 0;
   _clicksEnd = 0;
+  _released = 0;
   uint32_t t = millis();
   bool reading = digitalRead(_pin) == (_pinmode) ? HIGH : LOW;
   if (reading != _lastState) {
     _lastChange = t;
   }
   if (t - _lastChange > SB_DEB_TIMER) {
-    if (reading != _pressed) {
-      _pressed = reading;
+    if (reading == (_pinclosed) ? _pressed : !_pressed) {
+      _pressed = (_pinclosed) ? !reading : reading;
     }
 
     if (_pressed) {
@@ -60,6 +63,7 @@ void SbuttonMultiClick::tick() {
             mode = await;
             _clicksEnd = _clicks;
             _clicks = 0;
+            _released = 1;
           } else mode = released; _timer = t; break;
         case released: if (t - _timer >= SB_RELEASE_TIMER) {
             mode = await;
@@ -77,14 +81,15 @@ void SbuttonHold::tick() {
   _clicked = 0;
   _endClick = 0;
   _held = 0;
+  _released = 0;
   uint32_t t = millis();
   bool reading = digitalRead(_pin) == (_pinmode) ? HIGH : LOW;
   if (reading != _lastState) {
     _lastChange = t;
   }
   if (t - _lastChange > SB_DEB_TIMER) {
-    if (reading != _pressed) {
-      _pressed = reading;
+    if (reading == (_pinclosed) ? _pressed : !_pressed) {
+      _pressed = (_pinclosed) ? !reading : reading;
     }
 
     if (_pressed) {
@@ -115,8 +120,9 @@ void SbuttonHold::tick() {
         case pressed: if (_doubleClick) {
             mode = await;
             _endClick = 1;
-          } else mode = released; _timer = t; break;
-        case held: mode = await; _timer = t; break;
+          }
+          else mode = released; _timer = t;  _released = 1; break;
+        case held: mode = await; _timer = t;  _released = 1; break;
         case released: if (t - _timer >= SB_RELEASE_TIMER) {
             mode = await;
             _endClick = 1;
@@ -130,6 +136,7 @@ void SbuttonHold::tick() {
 
 void Sbutton::tick() {
   _clicked = 0;
+  _released = 0;
   _held = 0;
   _clicksEnd = 0;
   _clicksWithHeld = 0;
@@ -140,8 +147,8 @@ void Sbutton::tick() {
     _lastChange = t;
   }
   if (t - _lastChange > SB_DEB_TIMER) {
-    if (reading != _pressed) {
-      _pressed = reading;
+    if (reading == (_pinclosed) ? _pressed : !_pressed) {
+      _pressed = (_pinclosed) ? !reading : reading;
     }
 
     if (_pressed) {
@@ -176,8 +183,8 @@ void Sbutton::tick() {
             mode = await;
             _clicksEnd = _clicks;
             _clicks = 0;
-          } else mode = released; _timer = t; break;
-        case held: mode = await; _timer = t; _clicks = 0; break;
+          } else mode = released; _timer = t; _released = 1; break;
+        case held: mode = await; _timer = t; _clicks = 0; _released = 1; break;
         case released: if (t - _timer >= SB_RELEASE_TIMER) {
             mode = await;
             _timer = t;

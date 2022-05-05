@@ -8,7 +8,13 @@
 
 class SbuttonBase {
   public:
-    SbuttonBase(uint8_t Npin, uint8_t Npinmode) : _pin(Npin), _pinmode(Npinmode) {
+  SbuttonBase(uint8_t Npin) : _pin(Npin), _pinmode(0), _pinclosed(0) {
+      pinMode(_pin, INPUT);
+    };
+    SbuttonBase(uint8_t Npin, bool Npinmode) : _pin(Npin), _pinmode(Npinmode), _pinclosed(0) {
+      pinMode(_pin, (_pinmode) ? INPUT : INPUT_PULLUP);
+    };
+    SbuttonBase(uint8_t Npin, bool Npinmode, bool Npinclosed) : _pin(Npin), _pinmode(Npinmode), _pinclosed(Npinclosed) {
       pinMode(_pin, (_pinmode) ? INPUT : INPUT_PULLUP);
     };
     virtual void tick();
@@ -18,12 +24,16 @@ class SbuttonBase {
     bool isClicked() {
       return _clicked;
     }
-
+    bool isReleased() {
+      return _released;  
+    }
   protected:
     bool _pinmode: 1;
+    bool _pinclosed: 1;
     bool _lastState: 1;
     bool _pressed: 1;
     bool _clicked: 1;
+    bool _released: 1;
     uint8_t _pin;
     enum button_state {await, pressed, held, released} mode;
     uint32_t _lastChange;
@@ -31,7 +41,9 @@ class SbuttonBase {
 
 class SbuttonMultiClick: public SbuttonBase {
   public:
-    SbuttonMultiClick(uint8_t Npin, uint8_t Npinmode) : SbuttonBase(Npin, Npinmode) {};
+    SbuttonMultiClick(uint8_t Npin) : SbuttonBase(Npin) {};
+    SbuttonMultiClick(uint8_t Npin, bool Npinmode) : SbuttonBase(Npin, Npinmode) {};
+    SbuttonMultiClick(uint8_t Npin, bool Npinmode, bool Npinclosed) : SbuttonBase(Npin, Npinmode, Npinclosed) {};
     void tick() override;
     uint8_t hasClicks() {
       return _clicksEnd;
@@ -56,7 +68,9 @@ class SbuttonMultiClick: public SbuttonBase {
 
 class SbuttonHold: public SbuttonBase {
   public:
-    SbuttonHold(uint8_t Npin, uint8_t Npinmode) : SbuttonBase(Npin, Npinmode) {};
+    SbuttonHold(uint8_t Npin) : SbuttonBase(Npin) {};
+    SbuttonHold(uint8_t Npin, bool Npinmode) : SbuttonBase(Npin, Npinmode) {};
+    SbuttonHold(uint8_t Npin, bool Npinmode, bool Npinclosed) : SbuttonBase(Npin, Npinmode, Npinclosed) {};
     void tick() override;
     bool hasSingle() {
       return _endClick & !_doubleClick;
@@ -80,7 +94,9 @@ class SbuttonHold: public SbuttonBase {
 
 class Sbutton: public SbuttonMultiClick {
   public:
-    Sbutton(uint8_t Npin, uint8_t Npinmode) : SbuttonMultiClick(Npin, Npinmode) {};
+    Sbutton(uint8_t Npin) : SbuttonMultiClick(Npin) {};
+    Sbutton(uint8_t Npin, bool Npinmode) : SbuttonMultiClick(Npin, Npinmode) {};
+    Sbutton(uint8_t Npin, bool Npinmode, bool Npinclosed) : SbuttonMultiClick(Npin, Npinmode, Npinclosed) {};
     void tick() override;
     bool isHeld() {
       return _held;
